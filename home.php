@@ -1,10 +1,7 @@
 <?php
-/*
-      Author  : Suresh Pokharel
-      Email   : suresh.wrc@gmail.com
-      GitHub  : github.com/suresh021
-      URL     : psuresh.com.np
-*/ 
+  session_start();
+  if(!isset($_SESSION['user_id']))
+    header('location: login.php');
 ?>
 
 <html>
@@ -14,7 +11,7 @@
   <script src="//code.jquery.com/jquery.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <!-- <link rel="stylesheet" type="text/css" href="alertify/css/main.css"> -->
-<!--   <link rel="stylesheet" type="text/css" href="alertify/css/alertify.bootstrap.css"> -->
+  <!--   <link rel="stylesheet" type="text/css" href="alertify/css/alertify.bootstrap.css"> -->
   <link rel="stylesheet" type="text/css" href="alertify/css/alertify.core.css">
   <link rel="stylesheet" type="text/css" href="alertify/css/alertify.default.css">
   <!-- <link rel="stylesheet" type="text/css" href="alertify/css/alertify.css">  -->
@@ -26,12 +23,12 @@
 </head>
 <body>
   <br><br>
-
   <div class="container" >
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
         <div class="alert alert-success" role="alert">
-           <h4>TODO List Management using Bootstrap, PHP, MySql, AJAX, JQuery, Alertify JS</h4>
+          <h3>TodoList</h3>
+          <?php echo "<h4>User: ".$_SESSION['user_name']."</h4>" ?>
         </div>
       </div>
     </div>
@@ -64,7 +61,7 @@
 
     function validateForm(){
       var val=document.getElementById("txtNewItem").value;
-      if (val.length<5) {
+      if (val.length<1) {
         alertify.error("Item description must contains at least 5 characters");
         return false;
       }else{
@@ -75,7 +72,7 @@
 
     function validateEdit(desc){
       var desc=document.getElementById("txtNewItem").value;
-      if (desc.length<5) {
+      if (desc.length<1) {
         alertify.error("Item description must contains at least 5 characters");
         return false;
       }else{
@@ -188,7 +185,7 @@
         //var id= $(this).attr('id');
         alertify.prompt("Edit List Item, ID="+id, function (e, str) {
         if (e) {
-            if (str.length>5) {
+            if (str.length>=1) {
               /*change on database if edited text is valid*/
           //for spinner
             var buttonString= "<span class='glyphicon glyphicon-refresh glyphicon-refresh-animate' id='spinner'></span> "+$('#edit_'+id).html();
