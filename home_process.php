@@ -11,9 +11,18 @@
 	#ACT LIKE CONTROLLER
 
 	session_start();
+	if (isset($_GET['load_init']))
+	{
+		$username=$_SESSION['user_name'];
+		include 'home.php';
+    }
 
-	#WORK WITH TODO
-	 
+	if (isset($_REQUEST['load_list']))
+	{
+		$result=mysqli_query($dbconfig,"SELECT * FROM todos");
+		include 'todo_list.php';
+    }
+
 	if (isset($_GET['insert_description'])) 
 	{
 		$desc=$_GET['insert_description'];
@@ -37,39 +46,18 @@
 		echo json_encode($response_array);
   	}
 
-    if (isset($_GET['edit_id'])){
-    $edit_id= $_GET['edit_id']; 
-    $new_desc= $_GET['new_desc'];
-        if(mysqli_query($dbconfig,"UPDATE todos SET todoname='$new_desc' WHERE todo_id=$edit_id")){
-          $response_array['edit_status']="success";
-        }else {
-          $response_array['edit_status']="error";
-        }
-        header('Content-type: application/json');//sending response to ajax
-        echo json_encode($response_array);
-  }
- ?>
-
- <?php
-	#ACT LIKE HELPERS
-  	function check_login($username, $password)
-  	{
-		global $dbconfig;
-		echo $username.' '.$password;
-		$result=mysqli_query($dbconfig,"SELECT * FROM users WHERE username ='$username' and password = '$password'");
-		if(!$result || mysqli_num_rows($result) == 0) 
-			header('location: login.php');
-		else
-		{
-			while($row = mysqli_fetch_assoc($result))
-			{
-				$_SESSION['user_name']=$row['username'];
-				$_SESSION['user_email']=$row['email'];
-				$_SESSION['user_id']=$row['user_id'];
+    if (isset($_GET['edit_id']))
+	{
+		$edit_id= $_GET['edit_id']; 
+		$new_desc= $_GET['new_desc'];
+			if(mysqli_query($dbconfig,"UPDATE todos SET todoname='$new_desc' WHERE todo_id=$edit_id")){
+			$response_array['edit_status']="success";
+			}else {
+			$response_array['edit_status']="error";
 			}
-			header('location: index.php');
-		}
-  	}
+			header('Content-type: application/json');//sending response to ajax
+			echo json_encode($response_array);
+    }
  ?>
   
 

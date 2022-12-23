@@ -1,9 +1,3 @@
-<?php
-  session_start();
-  if(!isset($_SESSION['user_id']))
-    header('location: login.php');
-?>
-
 <html>
 <head>
   <!-- Latest compiled and minified CSS -->
@@ -20,21 +14,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>TODO List Management using Bootstrap, PHP, MySql, AJAX, JQuery, Alertify JS</title>
+  <script>
+    function load_list()
+    {   
+      $("#list").load("home_process.php", {load_list: 1});
+    }
+  </script>
 </head>
-<body>
   <br><br>
   <div class="container" >
     <div class="row">
       <div class="col-md-8 col-md-offset-2">
         <div class="alert alert-success" role="alert">
           <h3>TodoList</h3>
-          <?php echo "<h4>User: ".$_SESSION['user_name']."</h4>" ?>
+          <?php echo "<h4>User: ".$username."</h4>" ?>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div id="list" class="col-md-8 col-md-offset-2">  
-        <?php include 'list.php' ?>
       </div>
     </div>
     <div class="row">
@@ -45,6 +39,13 @@
             <button class="btn btn-primary" id="addButton" onclick="return validateForm();" type="button">Add New</button>
           </span>
         </div><!-- /input-group -->
+      </div>
+    </div>
+    <div class="row">
+      <div id="list" class="col-md-8 col-md-offset-2">  
+        <script>
+          load_list();
+        </script>
       </div>
     </div>
    <!--  <div>
@@ -58,13 +59,13 @@
   <script src="alertify/js/alertify.min.js"></script>
 
   <script>
-
     function validateForm(){
       var val=document.getElementById("txtNewItem").value;
       if (val.length<1) {
         alertify.error("Item description must contains at least 5 characters");
         return false;
-      }else{
+      }
+      else{
         InsertItemInDatabase();
       }
     }
@@ -111,7 +112,7 @@
       var new_desc=document.getElementById("txtNewItem").value;
       document.getElementById("txtNewItem").value="";
       $.ajax({
-        url:'process.php?insert_description=' + new_desc,
+        url:'home_process.php?insert_description=' + new_desc,
         complete: function (response) {
           var status = JSON.parse(response.responseText);
                // console.log(response);
@@ -120,7 +121,7 @@
               }else if(status.status =="error"){
                 alertify.error("Error while adding the item");
               }
-                  $( "#list" ).load( "list.php");// to reload the todo list from database
+                  load_list();
                   $( "#spinner" ).remove();//remove spinner as task is completed
                 },
                 error: function () {
@@ -142,12 +143,12 @@
             $('#delete_'+id).html(buttonString);
 
             $.ajax({
-              url:'process.php?delete_id=' + id,
+              url:'home_process.php?delete_id=' + id,
               complete: function (response) {
                      var status = JSON.parse(response.responseText);//parsing status from response received from php
                      if(status.delete_status =="success"){
                       alertify.success("Item Deleted");
-                           $( "#list" ).load( "list.php" );// to reload the todo list from database
+                           load_list()
                          }else if(status.delete_status =="error"){
                           alertify.error("Error while deleting the item");
                         }
@@ -158,26 +159,6 @@
                     });
           }
         });
-      }
-
-
-      //edit
-      function EditItem(id) {
-        $.ajax({
-          url:'process.php?edit_id=' + id,
-          complete: function (response) {
-                var status = JSON.parse(response.responseText);//parsing status from response received from php
-                if(status.edit_status =="success"){
-                  alertify.success("Item Deleted");
-                      $( "#list" ).load( "list.php" );// to reload the todo list from database
-                    }else if(status.edit_status =="error"){
-                      alertify.error("Error while deleting the item");
-                    }
-                  },
-                  error: function () {
-                    $('#output').html('Bummer: there was an error!');
-                  },
-                });
       }
 
 
@@ -192,13 +173,13 @@
             $('#edit_'+id).html(buttonString);
             
               $.ajax({
-                url:'process.php',
+                url:'home_process.php',
                 data : {edit_id:id, new_desc:str},
                 complete: function (response) {
                 var status = JSON.parse(response.responseText);//parsing status from response received from php
                 if(status.edit_status =="success"){
                   alertify.success("Information updated successfully");
-                      $( "#list" ).load( "list.php" );// to reload the todo list from database
+                      load_list();
                       $( "#spinner" ).remove(); //remove spinner as task is completed
                     }else if(status.edit_status =="error"){
                       alertify.error("Error while editing the item");

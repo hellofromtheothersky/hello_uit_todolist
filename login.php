@@ -1,30 +1,47 @@
-<?php  
-    #test branch nay thu
-    include 'process.php';
-    if(isset($_POST["SubmitButton"]))
+<script src="//code.jquery.com/jquery.js"></script>
+<script> 
+    $(document).ready(function()
     {
-        $my_username = $_POST['username']; 
-        $my_password = $_POST['password'];
-        check_login($my_username, $my_password);
-    }
-?>
+        $(document).on('click', '#summitbutton', function()
+        {
+            my_username=document.getElementById("username").value
+            my_password=document.getElementById("password").value
+            $.post("login_process.php",
+            {
+                login:1, my_username:my_username, my_password:my_password
+            },
+            function(data,status){
+                if(status=="success")
+                {
+                    $(".thongbao").html(data);
+                }
+            }); 
+        });
+        $(document).on('click', '#resetbutton', function()
+        {
+            $(".thongbao").html("");
+        });
+    });   
+</script>
 
-<form action="" method="post">
 <fieldset>
     <table>
         <tbody>
-            <tr>
-                <td>Username</td>
-                <td> <input size="25" type="text" name="username" placeholder="Nhập tên tài khoản"  autocomplete="off" required></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td> <input size="25" type="password" name="password" placeholder="Nhập mật khẩu" required></td>
-            </tr>
-            <tr>
-                <td> <input type="reset" value="Reset"> </td>
-                <td> <input type="submit" value="Submit" name=SubmitButton> </td>
+            <form method="post">
+                <tr>
+                    <td>Username</td>
+                    <td> <input size="25" id='username' type="text" name="username" placeholder="Nhập tên tài khoản"  autocomplete="off" required></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td> <input size="25" id='password' type="password" name="password" placeholder="Nhập mật khẩu" required></td>
+                </tr>
+                <tr>
+                    <td> <input type="reset" id=resetbutton value="Reset"> </td>
+            </form>
+                <td> <input type="submit" id=summitbutton value="Submit" name=SubmitButton> </td>
             </tr>
         </tbody>
     </table>
 </fieldset>
+<h2 class=thongbao></h2>

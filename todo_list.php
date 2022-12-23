@@ -1,26 +1,3 @@
-<?php
-/*
-      Author  : Suresh Pokharel
-      Email   : suresh.wrc@gmail.com
-      GitHub  : github.com/suresh021
-      URL     : psuresh.com.np
-*/ 
-?>
-
-<?php
-/*Database Connection*/
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'hellouit_todolist';
-Global $dbconfig; // to use globally
-$dbconfig = mysqli_connect($host,$username,$password,$database) or die("An Error occured while connecting to the database");
-?>
-
-<?php 
-$result=mysqli_query($dbconfig,"SELECT * FROM todos");
-
-?>
 <table class="table" id=todoListTable>
 	<thead>
 		<th class="col-md-1">ID</th>
